@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha - Surpresa para Marcella</title>
+
+    <!-- Link para a fonte Pacifico do Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+
+    <style>
+        body {
+            font-family: 'Pacifico', cursive;
+            text-align: center;
+            background-color: #f0f0f0;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            border: 2px solid #333;
+            font-size: 2em;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #message {
+            margin-top: 30px;
+            font-size: 1.5em;
+            display: none;
+            position: relative;
+        }
+
+        .voucher {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 20px;
+            border: 3px dashed #ff69b4;
+            background-color: #fff;
+            font-size: 1.2em;
+            color: #ff69b4;
+            text-align: center;
+            width: 300px;
+            transform: rotate(-5deg);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: bounce 0.6s ease-in-out infinite alternate;
+        }
+
+        .voucher::before, .voucher::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            border: 3px dashed #ff69b4;
+            width: 40px;
+            height: 40px;
+        }
+
+        .voucher::before {
+            top: -20px;
+            left: -20px;
+        }
+
+        .voucher::after {
+            bottom: -20px;
+            right: -20px;
+        }
+
+        /* Confetes e corações */
+        .confetti, .heart {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ff69b4;
+            animation: fall 2.5s infinite;
+            opacity: 0;
+        }
+
+        .heart {
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -10px;
+            transform: rotate(45deg);
+        }
+
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff69b4;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart:after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes fall {
+            0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(500px) rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0% { transform: rotate(-5deg) scale(1); }
+            100% { transform: rotate(5deg) scale(1.1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Jogo da Velha para Marcella</h1>
+    <p>Marque o último X para vencer e desbloquear a surpresa!</p>
+
+    <div class="game-board">
+        <div class="cell">X</div>
+        <div class="cell">O</div>
+        <div class="cell">X</div>
+        <div class="cell">O</div>
+        <div class="cell">X</div>
+        <div class="cell">O</div>
+        <div class="cell"></div> <!-- Espaço vazio para Marcella marcar -->
+        <div class="cell">X</div>
+        <div class="cell">O</div>
+    </div>
+
+    <div id="message">
+        Parabéns, Marcella! Você venceu!<br>
+        <div class="voucher">
+            Você acaba de ganhar uma noite de carinho, cafuné e muito denguinho! ❤️
+        </div>
+    </div>
+
+    <!-- Confetes -->
+    <div class="confetti" style="top: 0; left: 10%;"></div>
+    <div class="confetti" style="top: 0; left: 30%;"></div>
+    <div class="confetti" style="top: 0; left: 50%;"></div>
+    <div class="confetti" style="top: 0; left: 70%;"></div>
+    <div class="confetti" style="top: 0; left: 90%;"></div>
+    <!-- Corações -->
+    <div class="heart" style="top: 0; left: 20%;"></div>
+    <div class="heart" style="top: 0; left: 40%;"></div>
+    <div class="heart" style="top: 0; left: 60%;"></div>
+    <div class="heart" style="top: 0; left: 80%;"></div>
+
+    <script>
+        const emptyCell = document.querySelector('.game-board .cell:nth-child(7)');
+        const message = document.getElementById('message');
+        const confettis = document.querySelectorAll('.confetti');
+        const hearts = document.querySelectorAll('.heart');
+
+        emptyCell.addEventListener('click', function() {
+            // Marcella marca o X
+            emptyCell.textContent = 'X';
+            emptyCell.style.cursor = 'default';
+
+            // Mostra a mensagem de vitória
+            message.style.display = 'block';
+
+            // Mostra os confetes e corações
+            confettis.forEach(confetti => {
+                const delay = Math.random() * 1; // Atraso aleatório para os confetes caírem
+                const duration = Math.random() * 2 + 1; // Duração aleatória
+                confetti.style.animationDelay = delay + 's';
+                confetti.style.animationDuration = duration + 's';
+            });
+
+            hearts.forEach(heart => {
+                const delay = Math.random() * 1.5;
+                const duration = Math.random() * 3 + 1;
+                heart.style.animationDelay = delay + 's';
+                heart.style.animationDuration = duration + 's';
+            });
+        });
+    </script>
+
+</body>
+</html>
